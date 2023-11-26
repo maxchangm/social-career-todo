@@ -3,28 +3,16 @@ import React from 'react';
 
 import {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-  SortingState,
-  ColumnFiltersState,
   RowSelectionState,
   Updater,
-  VisibilityState,
+  flexRender,
+  getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
 } from '@tanstack/react-table';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Todo, TodoStatus } from '@/lib/types';
 import {
   columnFiltersAtom,
   columnVisibilityAtom,
@@ -33,11 +21,20 @@ import {
   sortingAtom,
   todosAtom,
 } from '@/atoms/todos';
-import { useAtom } from 'jotai';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import supabase from '@/lib/supabase';
-import { DataTableToolbar } from './data-table-toolbar';
-import { DataTablePagination } from './data-table-pagination';
+import { Todo, TodoStatus } from '@/lib/types';
+import { useAtom } from 'jotai';
 import Confetti from '../react-confetti';
+import { DataTablePagination } from './data-table-pagination';
+import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData extends Todo, TValue> {
   columns: ColumnDef<TData, TValue>[];

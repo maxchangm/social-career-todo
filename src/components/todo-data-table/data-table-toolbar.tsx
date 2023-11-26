@@ -1,13 +1,10 @@
 'use client';
 
 import { Table } from '@tanstack/react-table';
-
 import { Input } from '@/components/ui/input';
-
 import React from 'react';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { statuses } from './status-icons';
-
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
