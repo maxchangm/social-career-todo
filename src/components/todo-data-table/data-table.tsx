@@ -25,11 +25,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Todo, TodoStatus } from '../todo-columns';
-import { todosAtom } from '@/atoms/todos';
+import { isConfettiVisibleAtom, todosAtom } from '@/atoms/todos';
 import { useAtom } from 'jotai';
 import supabase from '@/lib/supabase';
 import { DataTableToolbar } from './data-table-toolbar';
 import { DataTablePagination } from './data-table-pagination';
+import Confetti from '../react-confetti';
 
 interface DataTableProps<TData extends Todo, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,6 +50,9 @@ const TodoDataframe = <TData extends Todo, TValue>({
   const [rowSelection, setRowSelection] = React.useState({});
 
   const [todoList, setTodoList] = useAtom(todosAtom);
+  const [isConfettiVisible, setIsConfettiVisible] = useAtom(
+    isConfettiVisibleAtom
+  );
 
   React.useEffect(() => {
     data.forEach((row, idx) => {
@@ -97,6 +101,12 @@ const TodoDataframe = <TData extends Todo, TValue>({
 
       const newData = data.map((row, idx) => {
         if (idx === changedIndex) {
+          if (row.status === 'pending') {
+            setIsConfettiVisible(true);
+            setTimeout(() => {
+              setIsConfettiVisible(false);
+            }, 2000);
+          }
           // If the row's selection status has changed, toggle the status.
           return {
             ...row,
@@ -138,6 +148,7 @@ const TodoDataframe = <TData extends Todo, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
+      {isConfettiVisible && <Confetti />}
       <div className="rounded-md border text-left">
         <Table>
           <TableHeader>
