@@ -24,6 +24,10 @@ import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import supabase from '@/lib/supabase';
+import { todosAtom } from '@/atoms/todos';
+import { useAtom } from 'jotai';
+import { Todo } from './todo-columns';
 
 const addTodoFormSchema = z.object({
   name: z
@@ -36,24 +40,50 @@ const addTodoFormSchema = z.object({
   dueDate: z.date({
     required_error: 'Please pick a date',
   }),
-  status: z.boolean().default(false),
+  status: z.enum(['pending', 'done']).default('pending'),
 });
 
 const AddTodoForm = () => {
+  const [todoList, setTodoList] = useAtom(todosAtom);
   const form = useForm<z.infer<typeof addTodoFormSchema>>({
     resolver: zodResolver(addTodoFormSchema),
     defaultValues: {
       name: '',
       dueDate: undefined,
-      status: false,
+      status: 'pending',
     },
   });
 
-  const handleFormSubmit = (values: z.infer<typeof addTodoFormSchema>) => {
+  const handleFormSubmit = async (
+    values: z.infer<typeof addTodoFormSchema>
+  ) => {
     console.log({
       ...values,
-      dueDate: values.dueDate.toDateString(),
+      dueDate: values.dueDate.toISOString(),
     });
+
+    const { data: returnedTodo, error: InsertTodoError } = await supabase
+      .from('todos')
+      .insert({
+        name: values.name,
+        due_date: values.dueDate.toISOString(),
+        status: values.status,
+      })
+      .select();
+
+    if (InsertTodoError || returnedTodo === null) {
+      console.error(InsertTodoError);
+    } else {
+      setTodoList((prev) => [
+        ...prev,
+        {
+          id: returnedTodo[0].id,
+          name: returnedTodo[0].name,
+          dueDate: returnedTodo[0].due_date,
+          status: returnedTodo[0].status,
+        } as Todo,
+      ]);
+    }
 
     form.reset();
   };

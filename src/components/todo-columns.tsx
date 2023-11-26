@@ -8,15 +8,24 @@ export type Todo = {
   id: string;
   name: string;
   dueDate: string;
-  status: boolean;
+  status: TodoStatus;
+  created_at: string;
 };
+
+export type TodoStatus = 'done' | 'pending';
 
 export const columns: ColumnDef<Todo>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
     cell: ({ row }) => {
-      return <div className="left-0">{row.getValue('name')}</div>;
+      return (
+        <div
+          className={`left-0 ${row.getValue('status') ? 'line-through' : ''}`}
+        >
+          {row.getValue('name')}
+        </div>
+      );
     },
   },
   {
@@ -30,6 +39,15 @@ export const columns: ColumnDef<Todo>[] = [
           Due Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div
+          className={`left-0 ${row.getValue('status') ? 'line-through' : ''}`}
+        >
+          {row.getValue('dueDate')}
+        </div>
       );
     },
   },
