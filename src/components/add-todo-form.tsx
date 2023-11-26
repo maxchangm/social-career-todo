@@ -23,7 +23,7 @@ import { CalendarIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import MaxWidthWrapper from './max-width-wrapper';
-import { Todo } from './todo-columns';
+import { Todo } from '@/lib/types';
 import { Input } from './ui/input';
 import { useToast } from './ui/use-toast';
 

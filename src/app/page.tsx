@@ -4,7 +4,7 @@ import MaxWidthWrapper from '@/components/max-width-wrapper';
 import TodoList from '@/components/todo-list';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '@/env.mjs';
-import { Todo, TodoStatus } from '@/components/todo-columns';
+import { Todo, TodoStatus } from '@/lib/types';
 
 type TodoFromDB = {
   id: string;

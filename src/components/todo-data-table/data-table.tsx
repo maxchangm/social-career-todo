@@ -24,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Todo, TodoStatus } from '../todo-columns';
+import { Todo, TodoStatus } from '@/lib/types';
 import {
   columnFiltersAtom,
   columnVisibilityAtom,

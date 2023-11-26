@@ -6,7 +6,7 @@ import { useAtom } from 'jotai';
 import { ArrowUpDown, Trash2 } from 'lucide-react';
 import React from 'react';
 import MaxWidthWrapper from './max-width-wrapper';
-import { Todo } from './todo-columns';
+import { Todo } from '@/lib/types';
 import TodoDataframe from './todo-data-table/data-table';
 import { statuses } from './todo-data-table/status-icons';
 import { Checkbox } from './ui/checkbox';

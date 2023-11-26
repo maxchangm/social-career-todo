@@ -1,4 +1,4 @@
-import { Todo } from '@/components/todo-columns';
+import { Todo } from '@/lib/types';
 import { atom } from 'jotai';
 import supabase from '@/lib/supabase';
 import {
