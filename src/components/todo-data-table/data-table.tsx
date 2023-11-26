@@ -28,6 +28,7 @@ import { Todo, TodoStatus } from '../todo-columns';
 import { todosAtom } from '@/atoms/todos';
 import { useAtom } from 'jotai';
 import supabase from '@/lib/supabase';
+import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData extends Todo, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -54,7 +55,7 @@ const TodoDataframe = <TData extends Todo, TValue>({
         setRowSelection((prev) => ({ ...prev, [idx]: true }));
       }
     });
-  }, []);
+  }, [todoList]);
 
   const table = useReactTable({
     data,
@@ -134,57 +135,60 @@ const TodoDataframe = <TData extends Todo, TValue>({
   });
 
   return (
-    <div className="rounded-md border text-left">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+    <div className="space-y-4">
+      <DataTableToolbar table={table} />
+      <div className="rounded-md border text-left">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => {
                 return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
                         )}
-                  </TableHead>
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
-              return (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-24 text-center"
-              >
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
