@@ -25,7 +25,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Todo, TodoStatus } from '../todo-columns';
-import { isConfettiVisibleAtom, todosAtom } from '@/atoms/todos';
+import {
+  columnFiltersAtom,
+  columnVisibilityAtom,
+  isConfettiVisibleAtom,
+  rowSelectionAtom,
+  sortingAtom,
+  todosAtom,
+} from '@/atoms/todos';
 import { useAtom } from 'jotai';
 import supabase from '@/lib/supabase';
 import { DataTableToolbar } from './data-table-toolbar';
@@ -41,14 +48,10 @@ const TodoDataframe = <TData extends Todo, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-
+  const [sorting, setSorting] = useAtom(sortingAtom);
+  const [columnFilters, setColumnFilters] = useAtom(columnFiltersAtom);
+  const [columnVisibility, setColumnVisibility] = useAtom(columnVisibilityAtom);
+  const [rowSelection, setRowSelection] = useAtom(rowSelectionAtom);
   const [todoList, setTodoList] = useAtom(todosAtom);
   const [isConfettiVisible, setIsConfettiVisible] = useAtom(
     isConfettiVisibleAtom
@@ -76,7 +79,6 @@ const TodoDataframe = <TData extends Todo, TValue>({
     enableSorting: true,
     enableFilters: true,
     onRowSelectionChange: (updaterOrValue: Updater<RowSelectionState>) => {
-      console.log(typeof updaterOrValue);
       // Check if updaterOrValue is a function.
       const newRowSelection =
         typeof updaterOrValue === 'function'
@@ -94,8 +96,6 @@ const TodoDataframe = <TData extends Todo, TValue>({
       ].filter(
         (id) => newRowSelection[id] !== (rowSelection as RowSelectionState)[id]
       );
-
-      console.log(changedRowIds);
 
       const changedIndex = parseInt(changedRowIds[0]);
 

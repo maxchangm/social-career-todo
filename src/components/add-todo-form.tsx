@@ -1,33 +1,30 @@
 'use client';
-import React from 'react';
-import MaxWidthWrapper from './max-width-wrapper';
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { todosAtom } from '@/atoms/todos';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from './ui/input';
+import supabase from '@/lib/supabase';
 import { cn } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Popover,
-  PopoverTrigger,
   PopoverContent,
+  PopoverTrigger,
 } from '@radix-ui/react-popover';
-import { format } from 'date-fns';
+import { useSetAtom } from 'jotai';
 import { CalendarIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import supabase from '@/lib/supabase';
-import { todosAtom } from '@/atoms/todos';
-import { useAtom } from 'jotai';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import MaxWidthWrapper from './max-width-wrapper';
 import { Todo } from './todo-columns';
+import { Input } from './ui/input';
 import { useToast } from './ui/use-toast';
 
 const addTodoFormSchema = z.object({
@@ -46,7 +43,7 @@ const addTodoFormSchema = z.object({
 
 const AddTodoForm = () => {
   const { toast } = useToast();
-  const [todoList, setTodoList] = useAtom(todosAtom);
+  const setTodoList = useSetAtom(todosAtom);
   const form = useForm<z.infer<typeof addTodoFormSchema>>({
     resolver: zodResolver(addTodoFormSchema),
     defaultValues: {
@@ -59,11 +56,6 @@ const AddTodoForm = () => {
   const handleFormSubmit = async (
     values: z.infer<typeof addTodoFormSchema>
   ) => {
-    console.log({
-      ...values,
-      dueDate: values.dueDate.toISOString(),
-    });
-
     const { data: returnedTodo, error: InsertTodoError } = await supabase
       .from('todos')
       .insert({

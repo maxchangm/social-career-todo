@@ -36,8 +36,6 @@ export default async function Home() {
     } as Todo;
   });
 
-  console.log(initialTodos);
-
   return (
     <main>
       <MaxWidthWrapper className="flex flex-col items-center justify-center text-center">
