@@ -29,6 +29,7 @@ import { todosAtom } from '@/atoms/todos';
 import { useAtom } from 'jotai';
 import supabase from '@/lib/supabase';
 import { DataTableToolbar } from './data-table-toolbar';
+import { DataTablePagination } from './data-table-pagination';
 
 interface DataTableProps<TData extends Todo, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -189,6 +190,7 @@ const TodoDataframe = <TData extends Todo, TValue>({
           </TableBody>
         </Table>
       </div>
+      <DataTablePagination table={table} />
     </div>
   );
 };
