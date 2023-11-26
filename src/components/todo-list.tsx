@@ -11,6 +11,8 @@ import TodoDataframe from './todo-data-table/data-table';
 import { statuses } from './todo-data-table/status-icons';
 import { Checkbox } from './ui/checkbox';
 import { Toggle } from './ui/toggle';
+import supabase from '@/lib/supabase';
+import { toast } from './ui/use-toast';
 
 interface ITodoListProps extends React.HTMLAttributes<HTMLDivElement> {
   initialTodos?: Todo[];
@@ -142,11 +144,32 @@ const TodoList = ({ initialTodos }: ITodoListProps) => {
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => {
-          const payment = row.original;
+          const todo = row.original;
+
+          const handleDelete = async () => {
+            setTodoList((prev) => prev.filter((item) => item.id !== todo.id));
+            const { data, error } = await supabase
+              .from('todos')
+              .delete()
+              .eq('id', todo.id);
+
+            if (error) {
+              console.error(error);
+            }
+
+            toast({
+              title: 'Todo deleted',
+              description: `Todo ${todo.name} was deleted`,
+              className: 'border-2 border-red-500 space-y-2 m-1',
+            });
+          };
 
           return (
-            <Toggle aria-label="Toggle italic">
-              <Trash2 className="mr-2 h-4 w-4" />
+            <Toggle
+              aria-label="Toggle italic hover:border-1 hover:border-red-500 "
+              onClick={handleDelete}
+            >
+              <Trash2 className="mr-2 h-4 w-4 text-red-500" />
               Delete
             </Toggle>
           );
