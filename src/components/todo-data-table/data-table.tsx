@@ -112,7 +112,8 @@ const TodoDataframe = <TData extends Todo, TValue>({
         const { data, error } = await supabase
           .from('todos')
           .update({ status: newData[changedIndex].status })
-          .eq('id', newData[changedIndex].id);
+          .eq('id', newData[changedIndex].id)
+          .select();
 
         if (error) {
           reject(error);

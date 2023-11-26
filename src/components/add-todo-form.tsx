@@ -28,6 +28,7 @@ import supabase from '@/lib/supabase';
 import { todosAtom } from '@/atoms/todos';
 import { useAtom } from 'jotai';
 import { Todo } from './todo-columns';
+import { useToast } from './ui/use-toast';
 
 const addTodoFormSchema = z.object({
   name: z
@@ -44,6 +45,7 @@ const addTodoFormSchema = z.object({
 });
 
 const AddTodoForm = () => {
+  const { toast } = useToast();
   const [todoList, setTodoList] = useAtom(todosAtom);
   const form = useForm<z.infer<typeof addTodoFormSchema>>({
     resolver: zodResolver(addTodoFormSchema),
@@ -74,6 +76,11 @@ const AddTodoForm = () => {
     if (InsertTodoError || returnedTodo === null) {
       console.error(InsertTodoError);
     } else {
+      toast({
+        title: 'Todo added',
+        description: `${returnedTodo[0].name} has been added`,
+        className: 'border-2 border-green-500',
+      });
       setTodoList((prev) => [
         ...prev,
         {

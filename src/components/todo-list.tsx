@@ -1,17 +1,16 @@
 'use client';
 
-import React from 'react';
-import { Todo, TodoStatus, columns } from './todo-columns';
-import MaxWidthWrapper from './max-width-wrapper';
-import TodoDataframe from './todo-data-table/data-table';
-import { atom, useAtom } from 'jotai';
-import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Trash2 } from 'lucide-react';
-import { Button } from './ui/button';
-import { Checkbox } from './ui/checkbox';
-import { statuses } from './todo-data-table/status-icons';
-import { Toggle } from './ui/toggle';
 import { todosAtom } from '@/atoms/todos';
+import { ColumnDef } from '@tanstack/react-table';
+import { useAtom } from 'jotai';
+import { ArrowUpDown, Trash2 } from 'lucide-react';
+import React from 'react';
+import MaxWidthWrapper from './max-width-wrapper';
+import { Todo } from './todo-columns';
+import TodoDataframe from './todo-data-table/data-table';
+import { statuses } from './todo-data-table/status-icons';
+import { Checkbox } from './ui/checkbox';
+import { Toggle } from './ui/toggle';
 
 interface ITodoListProps extends React.HTMLAttributes<HTMLDivElement> {
   initialTodos?: Todo[];

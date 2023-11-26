@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/toaster';
+
 import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const revalidate = 60;
+export const revalidate = 1;
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -26,6 +28,7 @@ export default function RootLayout({
         )}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
